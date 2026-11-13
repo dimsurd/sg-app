@@ -23,7 +23,9 @@ type Values = z.infer<typeof schema>;
 const DEMO = [
   { label: "Student (paid, with history)", email: "student1@stargeneration.test" },
   { label: "Student (not enrolled)", email: "student2@stargeneration.test" },
-  { label: "Tutor", email: "tutor1@stargeneration.test" },
+  { label: "Student (not enrolled)", email: "student3@stargeneration.test" },
+  { label: "Tutor (Math Group A)", email: "tutor1@stargeneration.test" },
+  { label: "Tutor (no class yet)", email: "tutor2@stargeneration.test" },
 ];
 
 export default function LoginPage() {
