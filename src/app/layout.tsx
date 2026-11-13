@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   description: "Group class schedules, logbooks, hours and earnings for Star Generation students and tutors.",
   applicationName: "Star Generation",
   appleWebApp: { capable: true, title: "Star Gen", statusBarStyle: "default" },
-  icons: { icon: "/pwa-icon/192", apple: "/pwa-icon/180" },
 };
 
 export const viewport: Viewport = {
