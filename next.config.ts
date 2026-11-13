@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   // The browser only ever talks to this origin; /api/* is proxied to the
   // Express API so the httpOnly session cookie is first-party and no CORS
   // is involved.
+  // The dev-only "N" badge sits where the floating bottom nav is; errors still show in the overlay.
+  devIndicators: false,
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${API_URL}/:path*` }];
   },

@@ -83,11 +83,12 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
 
       <main className="flex-1 px-4 pt-5 pb-28">{children}</main>
 
+      {/* Floating pill nav, lifted above the home indicator on phones. */}
       <nav
         aria-label="Main"
-        className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
       >
-        <ul className="mx-auto grid max-w-2xl grid-cols-3">
+        <ul className="pointer-events-auto mx-auto grid max-w-sm grid-cols-3 gap-1 rounded-full bg-primary/95 p-1.5 shadow-xl shadow-primary/25 ring-1 ring-white/10 backdrop-blur-md">
           {NAV[role].map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href, root);
             return (
@@ -96,18 +97,13 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
                   href={href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors",
-                    active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                    "flex h-12 flex-col items-center justify-center gap-0.5 rounded-full text-[11px] font-medium transition-all duration-200",
+                    active
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-primary-foreground/70 hover:bg-white/10 hover:text-primary-foreground",
                   )}
                 >
-                  <span
-                    className={cn(
-                      "flex h-7 w-12 items-center justify-center rounded-full transition-colors",
-                      active && "bg-accent text-accent-foreground",
-                    )}
-                  >
-                    <Icon className="size-4.5" />
-                  </span>
+                  <Icon className="size-4.5" />
                   {label}
                 </Link>
               </li>
