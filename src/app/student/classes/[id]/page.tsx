@@ -32,7 +32,8 @@ export default function StudentClassPage() {
     const lessons = schedule.data?.lessons ?? [];
     return {
       upcoming: lessons.filter((l) => new Date(l.endsAt).getTime() > fetchedAt),
-      past: lessons.filter((l) => new Date(l.endsAt).getTime() <= fetchedAt).reverse(),
+      // Only lessons this student actually took part in (not ones held before they joined).
+      past: lessons.filter((l) => new Date(l.endsAt).getTime() <= fetchedAt && l.isParticipant).reverse(),
     };
   }, [schedule.data, fetchedAt]);
 
