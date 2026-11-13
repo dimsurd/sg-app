@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui-kit";
 import { api, unwrap } from "@/lib/api/client";
+import { useOnce } from "@/lib/use-once";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -33,6 +34,7 @@ export default function LoginPage() {
     onSuccess: (r) => window.location.assign(`/${r.user.role}`),
     meta: { silent: true },
   });
+  const loginOnce = useOnce(login.mutate, login.isPending);
   const errors = form.formState.errors;
 
   return (
@@ -46,7 +48,7 @@ export default function LoginPage() {
       </div>
 
       <form
-        onSubmit={form.handleSubmit((v) => login.mutate(v))}
+        onSubmit={form.handleSubmit((v) => loginOnce(v))}
         noValidate
         className="space-y-5 rounded-t-3xl bg-background px-6 pt-8 pb-[max(2rem,env(safe-area-inset-bottom))] text-foreground"
       >

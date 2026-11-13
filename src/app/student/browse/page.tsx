@@ -19,6 +19,7 @@ import {
 import { EmptyState, ErrorState, LoadingRows, Spinner, StatusBadge } from "@/components/ui-kit";
 import { api, unwrap, type Schemas } from "@/lib/api/client";
 import { formatIDR } from "@/lib/format";
+import { useOnce } from "@/lib/use-once";
 
 type CatalogueClass = Schemas["CatalogueClass"];
 
@@ -35,6 +36,8 @@ export default function BrowsePage() {
       router.push("/student/invoices");
     },
   });
+
+  const enrollOnce = useOnce(enroll.mutate, enroll.isPending);
 
   return (
     <div className="space-y-5">
@@ -112,7 +115,7 @@ export default function BrowsePage() {
               <Button variant="outline" onClick={() => setEnrolling(null)}>
                 Cancel
               </Button>
-              <Button onClick={() => enroll.mutate(enrolling.id)} disabled={enroll.isPending}>
+              <Button onClick={() => enrollOnce(enrolling.id)} disabled={enroll.isPending}>
                 {enroll.isPending && <Spinner />}
                 Enroll & get invoice
               </Button>

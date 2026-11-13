@@ -16,6 +16,7 @@ import {
 import { EmptyState, ErrorState, LoadingRows, Spinner, StatusBadge } from "@/components/ui-kit";
 import { api, unwrap, type Schemas } from "@/lib/api/client";
 import { formatDate, formatIDR } from "@/lib/format";
+import { useOnce } from "@/lib/use-once";
 
 type Invoice = Schemas["Invoice"];
 
@@ -32,6 +33,8 @@ export default function InvoicesPage() {
       setPaying(null);
     },
   });
+
+  const payOnce = useOnce(pay.mutate, pay.isPending);
 
   return (
     <div className="space-y-5">
@@ -92,7 +95,7 @@ export default function InvoicesPage() {
               <Button variant="outline" onClick={() => setPaying(null)}>
                 Cancel
               </Button>
-              <Button onClick={() => pay.mutate(paying.id)} disabled={pay.isPending}>
+              <Button onClick={() => payOnce(paying.id)} disabled={pay.isPending}>
                 {pay.isPending && <Spinner />}
                 Simulate payment
               </Button>

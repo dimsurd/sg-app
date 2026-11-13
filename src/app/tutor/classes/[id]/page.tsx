@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { EmptyState, ErrorState, LoadingRows, Spinner, StatusBadge } from "@/components/ui-kit";
 import { api, unwrap, type Schemas } from "@/lib/api/client";
 import { formatIDR, formatLessonSlot, formatMinutes, TZ } from "@/lib/format";
+import { useOnce } from "@/lib/use-once";
 
 type Lesson = Schemas["Lesson"];
 
@@ -194,6 +195,8 @@ function ScheduleForm({ classId }: { classId: string }) {
     },
   });
 
+  const scheduleOnce = useOnce(schedule.mutate, schedule.isPending);
+
   return (
     <Card>
       <CardHeader>
@@ -206,7 +209,7 @@ function ScheduleForm({ classId }: { classId: string }) {
           className="grid gap-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!invalid) schedule.mutate();
+            if (!invalid) scheduleOnce();
           }}
         >
           {schedule.error && (

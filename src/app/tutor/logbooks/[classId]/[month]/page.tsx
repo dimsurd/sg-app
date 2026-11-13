@@ -26,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ErrorState, LoadingRows, Spinner, StatusBadge } from "@/components/ui-kit";
 import { api, unwrap, type Schemas } from "@/lib/api/client";
 import { formatDateTime, formatLessonSlot, formatMonth, humanize } from "@/lib/format";
+import { useOnce } from "@/lib/use-once";
 
 type MonthLesson = Schemas["TutorLogbookMonth"]["lessons"][number];
 
@@ -46,6 +47,8 @@ export default function LogbookMonthPage() {
       setConfirmSubmit(false);
     },
   });
+
+  const submitOnce = useOnce(submit.mutate, submit.isPending);
 
   if (logbook.error) return <ErrorState error={logbook.error} onRetry={() => logbook.refetch()} />;
   if (logbook.isPending) return <LoadingRows rows={5} />;
@@ -148,7 +151,7 @@ export default function LogbookMonthPage() {
             <Button variant="outline" onClick={() => setConfirmSubmit(false)}>
               Keep editing
             </Button>
-            <Button onClick={() => submit.mutate()} disabled={submit.isPending}>
+            <Button onClick={() => submitOnce()} disabled={submit.isPending}>
               {submit.isPending && <Spinner />}
               Submit
             </Button>
@@ -194,6 +197,7 @@ function LessonEntry({ index, lesson, classId, month }: { index: number; lesson:
       setEditing(false);
     },
   });
+  const saveOnce = useOnce(save.mutate, save.isPending);
   const errors = form.formState.errors;
   const showForm = lesson.canEdit && (editing || !entry);
 
@@ -218,7 +222,7 @@ function LessonEntry({ index, lesson, classId, month }: { index: number; lesson:
           {!lesson.hasEnded ? (
             <p className="text-sm text-muted-foreground">You can write this entry once the lesson has ended.</p>
           ) : showForm ? (
-            <form onSubmit={form.handleSubmit((v) => save.mutate(v))} className="grid gap-3" noValidate>
+            <form onSubmit={form.handleSubmit((v) => saveOnce(v))} className="grid gap-3" noValidate>
               <EntryField label="Topic" error={errors.topic?.message} id={`topic-${lesson.id}`}>
                 <Input id={`topic-${lesson.id}`} {...form.register("topic")} aria-invalid={!!errors.topic} />
               </EntryField>

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui-kit";
 import { api, unwrap } from "@/lib/api/client";
+import { useOnce } from "@/lib/use-once";
 
 /** "Buy package": issues a new package invoice on the student's existing enrollment (seat is kept). */
 export function BuyPackageButton({
@@ -40,6 +41,8 @@ export function BuyPackageButton({
     },
   });
 
+  const buyOnce = useOnce(buy.mutate, buy.isPending);
+
   return (
     <>
       <Button variant={variant} size="sm" onClick={() => setOpen(true)}>
@@ -58,7 +61,7 @@ export function BuyPackageButton({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Not now
             </Button>
-            <Button onClick={() => buy.mutate()} disabled={buy.isPending}>
+            <Button onClick={() => buyOnce()} disabled={buy.isPending}>
               {buy.isPending && <Spinner />}
               Create invoice
             </Button>
