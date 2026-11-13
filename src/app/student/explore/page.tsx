@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClassAdvisor } from "@/components/student/class-advisor";
 import { ClassCatalogue } from "@/components/student/class-catalogue";
 
 export const metadata: Metadata = { title: "Explore classes" };
@@ -11,6 +12,7 @@ export default function ExplorePage() {
         <p className="text-sm text-muted-foreground">Small groups, one tutor. Pay per package of hours.</p>
       </div>
       <ClassCatalogue />
+      <ClassAdvisor />
     </div>
   );
 }

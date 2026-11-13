@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui-kit";
 import { api, unwrap } from "@/lib/api/client";
+import { ADVISOR_STORAGE_PREFIX } from "@/components/student/class-advisor";
 
 type Role = "student" | "tutor";
 
@@ -65,6 +66,13 @@ export function MobileShell({ role, children }: { role: Role; children: React.Re
     setLeaving(true);
     await api.POST("/auth/logout");
     clearServiceWorkerPages();
+    try {
+      Object.keys(sessionStorage)
+        .filter((k) => k.startsWith(ADVISOR_STORAGE_PREFIX))
+        .forEach((k) => sessionStorage.removeItem(k));
+    } catch {
+      /* storage unavailable */
+    }
     // Full reload on purpose: clears all cached data and lets the proxy see the cookie is gone.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/login";

@@ -16,6 +16,8 @@ Mobile-first, installable web app for students and tutors.
 
 The API must be running on `http://localhost:4000` (see sg-api's README).
 
+The only setting is `API_URL` (see `.env.example`): where `/api/*` is proxied. It defaults to `http://localhost:4000`, so local dev needs no `.env`. It's read at build time; the browser never sees it and no secrets live here.
+
 ```bash
 pnpm install
 pnpm dev            # http://localhost:3000

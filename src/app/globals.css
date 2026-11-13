@@ -131,3 +131,12 @@
     @apply font-sans;
   }
 }
+
+/* Class advisor "Ask AI" button: a light sweep every few seconds. */
+@keyframes advisor-shimmer {
+  0%, 60% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[advisor-shimmer_3\.5s_ease-in-out_infinite\] { animation: none; }
+}

@@ -25,7 +25,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         onError: (error, _vars, _ctx, mutation) => {
           if (!mutation.meta?.silent) toast.error(error.message);
         },
-        onSuccess: () => qc.invalidateQueries(),
+        // Writes change balances/invoices everywhere; read-only mutations (the advisor) don't.
+        onSuccess: (_data, _vars, _ctx, mutation) => {
+          if (!mutation.meta?.readOnly) qc.invalidateQueries();
+        },
       }),
     });
     return qc;

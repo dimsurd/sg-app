@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { CalendarClock, GraduationCap, Hourglass, ReceiptText } from "lucide-react";
 import { SectionTitle, StatTile, WelcomeBanner } from "@/components/home/home-kit";
+import { ClassAdvisor } from "@/components/student/class-advisor";
 import { FeaturedClasses } from "@/components/student/featured-classes";
 import { api, unwrap } from "@/lib/api/client";
 import { formatDateTime, formatIDR, formatMinutes, formatTime, TZ } from "@/lib/format";
@@ -84,6 +85,8 @@ export default function StudentHome() {
         <SectionTitle action={{ href: "/student/explore", label: "See all" }}>Featured classes</SectionTitle>
         <FeaturedClasses />
       </section>
+
+      <ClassAdvisor />
     </div>
   );
 }

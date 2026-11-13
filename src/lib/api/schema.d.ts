@@ -1645,6 +1645,135 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/student/assistant": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Whether the AI class advisor is available
+         * @description The advisor is optional; it's enabled when the API has an LLM key configured.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Which frontend is calling; selects the session cookie and which roles may log in. Defaults to `app`. */
+                    "X-SG-Client"?: components["parameters"]["Client"];
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Advisor status */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            enabled: boolean;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Ask the AI class advisor which classes suit me
+         * @description Stateless: send the whole chat (max 20 messages, last one from the student). The model only
+         *     sees the live catalogue and its picks are checked against it, so `classes` are always real,
+         *     joinable catalogue classes (never full ones, max 3). Rate limited per student (20 per 10 min).
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: {
+                    /** @description Which frontend is calling; selects the session cookie and which roles may log in. Defaults to `app`. */
+                    "X-SG-Client"?: components["parameters"]["Client"];
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    /**
+                     * @example {
+                     *       "messages": [
+                     *         {
+                     *           "role": "user",
+                     *           "content": "Grade 8",
+                     *           "olympiad math": null,
+                     *           "Thursday or Friday": null
+                     *         }
+                     *       ]
+                     *     }
+                     */
+                    "application/json": {
+                        messages: {
+                            /** @enum {string} */
+                            role: "user" | "assistant";
+                            content: string;
+                            /** @description Classes the advisor recommended in that assistant turn */
+                            classIds?: components["schemas"]["Id"][];
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description The advisor's reply */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            reply: string;
+                            classes: components["schemas"]["CatalogueClass"][];
+                            /** @description Quick replies the student can tap */
+                            suggestions: string[];
+                        };
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                /** @description Too many questions in a short time */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description The model failed or gave an unusable answer */
+                502: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Advisor not configured */
+                503: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/student/invoices": {
         parameters: {
             query?: never;
