@@ -45,7 +45,7 @@ export async function unwrap<T>(promise: Promise<Result<T>>): Promise<T> {
   try {
     result = await promise;
   } catch {
-    throw new ApiError(0, "You're offline. Check your connection and try again.");
+    throw new ApiError(0, "Couldn't reach the server. Check your connection and try again.");
   }
   const { data, error, response } = result;
   if (error !== undefined || !response.ok) {
