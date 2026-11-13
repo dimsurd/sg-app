@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { BookOpenCheck, Compass, Download, Home, LogOut, ReceiptText, Star, Wallet } from "lucide-react";
+import { BookOpenCheck, Compass, Download, Home, LogOut, ReceiptText, Wallet } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "cn";
@@ -59,9 +60,7 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
     <div className="mx-auto flex min-h-screen max-w-2xl flex-col">
       <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b bg-background/90 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 backdrop-blur">
         <Link href={root} className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-accent">
-            <Star className="size-3.5 fill-current" />
-          </span>
+          <Image src="/brand/star-mark.png" alt="" width={22} height={25} priority />
           <span className="text-xs font-semibold tracking-[0.2em]">STAR GENERATION</span>
         </Link>
         <div className="flex items-center gap-2">

@@ -1,11 +1,23 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 
-/** App icon (navy tile, gold star) rendered as PNG at the requested size. */
+/** Star Generation star mark (public/brand/star-mark.png, 568×636) as a data URL, read once. */
+let markDataUrl: Promise<string> | null = null;
+function starMark() {
+  markDataUrl ??= readFile(path.join(process.cwd(), "public/brand/star-mark.png")).then(
+    (buf) => `data:image/png;base64,${buf.toString("base64")}`,
+  );
+  return markDataUrl;
+}
+
+/** App icon: the official gold star mark on a navy tile, as PNG at the requested size. */
 export async function GET(request: Request, { params }: { params: Promise<{ size: string }> }) {
   const { size: raw } = await params;
   const size = Math.min(1024, Math.max(48, Number(raw) || 192));
   const maskable = new URL(request.url).searchParams.has("maskable");
-  const star = size * (maskable ? 0.42 : 0.56); // maskable icons need a safe zone
+  const markHeight = size * (maskable ? 0.5 : 0.66); // maskable icons need a safe zone
+  const markWidth = markHeight * (568 / 636);
 
   return new ImageResponse(
     (
@@ -20,12 +32,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ size
           borderRadius: maskable ? 0 : size * 0.22,
         }}
       >
-        <svg width={star} height={star} viewBox="0 0 24 24">
-          <path
-            fill="#F1C019"
-            d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.54L12 17.5l-5.87 3.08 1.12-6.54L2.5 9.41l6.56-.95L12 2.5z"
-          />
-        </svg>
+        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse renders plain <img> */}
+        <img src={await starMark()} width={markWidth} height={markHeight} alt="" />
       </div>
     ),
     { width: size, height: size, headers: { "Cache-Control": "public, max-age=604800, immutable" } },

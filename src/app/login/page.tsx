@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Star } from "lucide-react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -40,10 +40,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col bg-primary text-primary-foreground">
       <div className="flex flex-1 flex-col justify-end px-6 pt-[max(3rem,env(safe-area-inset-top))] pb-8">
-        <span className="mb-6 flex size-12 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-          <Star className="size-6 fill-current" />
-        </span>
-        <p className="text-xs font-semibold tracking-[0.25em] text-primary-foreground/70">STAR GENERATION</p>
+        <Image src="/brand/wordmark.png" alt="Star Generation" width={280} height={41} priority className="mb-2" />
         <h1 className="mt-2 text-3xl leading-tight font-semibold">Your classes, hours and progress.</h1>
       </div>
 
