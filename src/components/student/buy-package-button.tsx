@@ -1,20 +1,12 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
-import { PackagePlus } from "lucide-react";
+import { Hourglass, Info, PackagePlus, Wallet } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui-kit";
+import { ActionSheet, FactRow } from "@/components/action-sheet";
 import { api, unwrap } from "@/lib/api/client";
 import { useOnce } from "@/lib/use-once";
 
@@ -48,26 +40,24 @@ export function BuyPackageButton({
       <Button variant={variant} size="sm" onClick={() => setOpen(true)}>
         <PackagePlus /> Buy package
       </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Buy another {hours}-hour package?</DialogTitle>
-            <DialogDescription>
-              You&apos;ll get an invoice for {className} at the class&apos;s current hourly rate. You keep your seat, and once
-              it&apos;s paid you&apos;re added back to upcoming lessons.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Not now
-            </Button>
-            <Button onClick={() => buyOnce()} disabled={buy.isPending}>
-              {buy.isPending && <Spinner />}
-              Create invoice
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ActionSheet
+        open={open}
+        onOpenChange={setOpen}
+        title={`Buy another ${hours}-hour package?`}
+        description={className}
+        confirmLabel="Create invoice"
+        onConfirm={() => buyOnce()}
+        pending={buy.isPending}
+      >
+        <div className="divide-y rounded-xl border px-3">
+          <FactRow icon={Hourglass} label="Package" value={`${hours} hours`} />
+          <FactRow icon={Wallet} label="Price" value="Current class rate" />
+        </div>
+        <p className="flex gap-2 rounded-xl bg-accent/15 p-3 text-sm">
+          <Info className="mt-0.5 size-4 shrink-0 text-warning" />
+          You keep your seat. Once it&apos;s paid you&apos;re added back to upcoming lessons.
+        </p>
+      </ActionSheet>
     </>
   );
 }

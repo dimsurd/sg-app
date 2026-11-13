@@ -62,7 +62,7 @@ export function TextPromptDialog({
         onOpenChange(o);
       }}
     >
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -74,7 +74,7 @@ function InstallGuide({ mode, onClose }: { mode: InstallMode | null; onClose: ()
             Using Chrome on iPhone? Tap Share in the address bar, then Add to Home Screen.
           </p>
         )}
-        <Button onClick={onClose} className="w-full">
+        <Button onClick={onClose} className="h-12 w-full rounded-full text-base">
           Got it
         </Button>
       </DialogContent>

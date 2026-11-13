@@ -68,7 +68,9 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          // The app is mobile-first at every width: dialogs are always bottom sheets,
+          // centred in the app column on wider screens.
+          "fixed inset-x-0 bottom-0 z-50 mx-auto grid max-h-[90dvh] w-full max-w-2xl gap-4 overflow-y-auto rounded-t-3xl bg-popover px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-sm text-popover-foreground ring-1 ring-foreground/10 duration-200 outline-none data-open:animate-in data-open:fade-in-0 data-open:slide-in-from-bottom-10 data-closed:animate-out data-closed:fade-out-0 data-closed:slide-out-to-bottom-10",
           className
         )}
         onCloseAutoFocus={(event) => {
@@ -80,12 +82,13 @@ function DialogContent({
         }}
         {...rest}
       >
+        <span aria-hidden className="mx-auto -mb-1 h-1.5 w-10 rounded-full bg-muted" />
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close data-slot="dialog-close" asChild>
             <Button
               variant="ghost"
-              className="absolute top-2 right-2"
+              className="absolute top-3 right-3"
               size="icon-sm"
             >
               <XIcon
@@ -122,7 +125,8 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end",
+        // Big stacked pill buttons, easy to reach with a thumb.
+        "mt-1 flex flex-col-reverse gap-2 *:data-[slot=button]:h-12 *:data-[slot=button]:rounded-full *:data-[slot=button]:text-base",
         className
       )}
       {...props}
