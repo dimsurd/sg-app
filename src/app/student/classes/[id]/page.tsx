@@ -41,7 +41,7 @@ export default function StudentClassPage() {
 
   return (
     <div className="space-y-5">
-      <Link href="/student" className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+      <Link href="/student/classes" className="inline-flex items-center gap-1 text-sm text-muted-foreground">
         <ArrowLeft className="size-4" /> My classes
       </Link>
 
@@ -70,10 +70,12 @@ export default function StudentClassPage() {
               inverse
               paidMinutes={cls.paidMinutes}
               usedMinutes={cls.usedMinutes}
+              awaitingMinutes={cls.awaitingMinutes}
               reservedMinutes={cls.reservedMinutes}
             />
             <p className="text-xs text-primary-foreground/70">
               {formatMinutes(cls.usedMinutes)} used · {formatMinutes(cls.reservedMinutes)} booked for upcoming lessons
+              {cls.awaitingMinutes > 0 && ` · ${formatMinutes(cls.awaitingMinutes)} awaiting tutor notes`}
             </p>
           </CardContent>
         </Card>

@@ -9,20 +9,21 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui-kit";
 import type { Schemas } from "@/lib/api/client";
-import { classMeta, type Subject } from "@/lib/class-meta";
+import { SUBJECT_GRADIENT, classMeta } from "@/lib/class-meta";
 import { formatIDR } from "@/lib/format";
 
 type CatalogueClass = Schemas["CatalogueClass"];
 
-/** Dark, subject-tinted gradients: white text stays above 4.5:1 on every stop. */
-const GRADIENT: Record<Subject, string> = {
-  math: "from-[#2F3F5F] to-[#34588F]",
-  science: "from-[#1F4B52] to-[#24685F]",
-  english: "from-[#3A3366] to-[#5A3F7A]",
-  other: "from-[#2F3F5F] to-[#3E4F72]",
-};
 
-export function ClassCard({ cls: c, onEnroll }: { cls: CatalogueClass; onEnroll: (c: CatalogueClass) => void }) {
+export function ClassCard({
+  cls: c,
+  onEnroll,
+  className,
+}: {
+  cls: CatalogueClass;
+  onEnroll: (c: CatalogueClass) => void;
+  className?: string;
+}) {
   const meta = classMeta(c.name, c.description);
   const seatsLeft = Math.max(0, c.capacity - c.seatsTaken);
   const full = seatsLeft === 0;
@@ -31,9 +32,9 @@ export function ClassCard({ cls: c, onEnroll }: { cls: CatalogueClass; onEnroll:
   const filled = Math.min(100, (c.seatsTaken / c.capacity) * 100);
 
   return (
-    <Card className="gap-0 overflow-hidden py-0 shadow-sm">
+    <Card className={cn("gap-0 overflow-hidden py-0 shadow-sm", className)}>
       {/* Header: subject gradient, title and the main badges */}
-      <div className={cn("relative overflow-hidden bg-gradient-to-br p-4 text-white", GRADIENT[meta.subject])}>
+      <div className={cn("relative overflow-hidden bg-gradient-to-br p-4 text-white", SUBJECT_GRADIENT[meta.subject])}>
         <Image
           src="/brand/star-mark.png"
           alt=""
@@ -59,7 +60,7 @@ export function ClassCard({ cls: c, onEnroll }: { cls: CatalogueClass; onEnroll:
       </div>
 
       {/* Body: schedule, seats, price, action */}
-      <div className="space-y-4 p-4">
+      <div className="flex flex-1 flex-col gap-4 p-4">
         {/* Catalogue descriptions are mostly the schedule, which the badges already show. */}
         {!meta.day && c.description && <p className="line-clamp-2 text-sm text-muted-foreground">{c.description}</p>}
         {(meta.day || meta.time || meta.mode) && (
@@ -123,19 +124,22 @@ export function ClassCard({ cls: c, onEnroll }: { cls: CatalogueClass; onEnroll:
           </div>
         </div>
 
-        {c.myEnrollmentStatus === "active" ? (
-          <Button asChild variant="outline" className="h-10 w-full">
-            <Link href={`/student/classes/${c.id}`}>Open class</Link>
-          </Button>
-        ) : c.myEnrollmentStatus === "pending_payment" ? (
-          <Button asChild className="h-10 w-full">
-            <Link href="/student/invoices">Pay to unlock</Link>
-          </Button>
-        ) : (
-          <Button className="h-10 w-full" disabled={full} onClick={() => onEnroll(c)}>
-            {full ? "Class is full" : "Enroll"}
-          </Button>
-        )}
+        {/* mt-auto keeps the action at the bottom when cards sit side by side */}
+        <div className="mt-auto">
+          {c.myEnrollmentStatus === "active" ? (
+            <Button asChild variant="outline" className="h-10 w-full">
+              <Link href={`/student/classes/${c.id}`}>Open class</Link>
+            </Button>
+          ) : c.myEnrollmentStatus === "pending_payment" ? (
+            <Button asChild className="h-10 w-full">
+              <Link href="/student/invoices">Pay to unlock</Link>
+            </Button>
+          ) : (
+            <Button className="h-10 w-full" disabled={full} onClick={() => onEnroll(c)}>
+              {full ? "Class is full" : "Enroll"}
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

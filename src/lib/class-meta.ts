@@ -51,3 +51,11 @@ export function classMeta(name: string, description = ""): ClassMeta {
     mode: sched?.[4] ? sched[4][0]!.toUpperCase() + sched[4].slice(1).toLowerCase() : undefined,
   };
 }
+
+/** Dark, subject-tinted gradients for card headers: white text stays above 4.5:1 on every stop. */
+export const SUBJECT_GRADIENT: Record<Subject, string> = {
+  math: "from-[#2F3F5F] to-[#34588F]",
+  science: "from-[#1F4B52] to-[#24685F]",
+  english: "from-[#3A3366] to-[#5A3F7A]",
+  other: "from-[#2F3F5F] to-[#3E4F72]",
+};
