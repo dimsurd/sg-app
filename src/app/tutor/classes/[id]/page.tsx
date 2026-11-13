@@ -56,8 +56,8 @@ export default function TutorClassPage() {
 
   return (
     <div className="space-y-5">
-      <Link href="/tutor" className="inline-flex items-center gap-1 text-sm text-muted-foreground">
-        <ArrowLeft className="size-4" /> Teaching
+      <Link href="/tutor/classes" className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+        <ArrowLeft className="size-4" /> My classes
       </Link>
       {cls.isPending ? (
         <LoadingRows rows={2} />
