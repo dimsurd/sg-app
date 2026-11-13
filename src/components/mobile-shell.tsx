@@ -5,7 +5,8 @@ import { BookOpenCheck, Compass, Download, Home, LogOut, ReceiptText, Star, Wall
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "cn";
-import { InstallBanner, useInstallAction } from "@/components/install-app";
+import { useInstallAction } from "@/components/install-app";
+import { Button } from "@/components/ui/button";
 import { clearServiceWorkerPages } from "@/components/pwa-runtime";
 import {
   DropdownMenu,
@@ -63,33 +64,34 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
           </span>
           <span className="text-xs font-semibold tracking-[0.2em]">STAR GENERATION</span>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground"
-            aria-label="Account"
-          >
-            {initials || "…"}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-52">
-            <DropdownMenuLabel>
-              <p className="truncate">{name}</p>
-              <p className="text-xs font-normal text-muted-foreground capitalize">{role}</p>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {installer.canInstall && (
-              <DropdownMenuItem onSelect={installer.install}>
-                <Download /> Install app
+        <div className="flex items-center gap-2">
+          {installer.canInstall && (
+            <Button size="sm" variant="outline" onClick={installer.install} className="rounded-full">
+              <Download /> Install app
+            </Button>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground"
+              aria-label="Account"
+            >
+              {initials || "…"}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuLabel>
+                <p className="truncate">{name}</p>
+                <p className="text-xs font-normal text-muted-foreground capitalize">{role}</p>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={logout}>
+                <LogOut /> Log out
               </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onSelect={logout}>
-              <LogOut /> Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </header>
 
       <main className="flex-1 px-4 pt-5 pb-28">
-        {pathname === root && <InstallBanner />}
         {children}
       </main>
       {installer.dialog}
