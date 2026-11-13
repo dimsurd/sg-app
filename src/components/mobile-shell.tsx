@@ -1,10 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { BookOpenCheck, Compass, Home, LogOut, ReceiptText, Star, Wallet } from "lucide-react";
+import { BookOpenCheck, Compass, Download, Home, LogOut, ReceiptText, Star, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "cn";
+import { InstallBanner, useInstallAction } from "@/components/install-app";
 import { clearServiceWorkerPages } from "@/components/pwa-runtime";
 import {
   DropdownMenu,
@@ -37,6 +38,7 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
   const pathname = usePathname();
   const me = useQuery({ queryKey: ["me"], queryFn: () => unwrap(api.GET("/auth/me")) });
   const root = `/${role}`;
+  const installer = useInstallAction();
   const name = me.data?.user.fullName ?? "";
   const initials = name
     .split(" ")
@@ -74,6 +76,11 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
               <p className="text-xs font-normal text-muted-foreground capitalize">{role}</p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {installer.canInstall && (
+              <DropdownMenuItem onSelect={installer.install}>
+                <Download /> Install app
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onSelect={logout}>
               <LogOut /> Log out
             </DropdownMenuItem>
@@ -81,7 +88,11 @@ export function MobileShell({ role, children }: { role: "student" | "tutor"; chi
         </DropdownMenu>
       </header>
 
-      <main className="flex-1 px-4 pt-5 pb-28">{children}</main>
+      <main className="flex-1 px-4 pt-5 pb-28">
+        {pathname === root && <InstallBanner />}
+        {children}
+      </main>
+      {installer.dialog}
 
       {/* Floating pill nav, lifted above the home indicator on phones. */}
       <nav
