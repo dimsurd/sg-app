@@ -44,10 +44,11 @@ To try the PWA itself (install prompt, offline page), run a production build: `p
   - network-first for pages, with an `/offline` fallback
   - **never caches `/api`**, so balances and invoices are always live; cached pages are cleared on logout
 - Offline banner driven by React Query's online state; queries resume automatically on reconnect.
-- **Install button** (home-screen card + account menu, `src/components/install-app.tsx`):
+- **Install app button** in the header on every screen (`src/components/install-app.tsx`):
   - Chromium (Android, desktop Chrome/Edge): opens the native install dialog via `beforeinstallprompt`
   - iOS/iPadOS: there is no install API, so it shows a Share → Add to Home Screen guide
-  - Hidden once the app is installed. "Not now" is remembered for 14 days.
+  - Android browsers that don't offer a prompt: a browser-menu → Install app guide
+  - Hidden once the app is installed
 
 ## Layout
 
