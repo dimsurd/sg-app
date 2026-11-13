@@ -1,13 +1,11 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Search, Users, X } from "lucide-react";
-import Link from "next/link";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -17,7 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { EmptyState, ErrorState, LoadingRows, Spinner, StatusBadge } from "@/components/ui-kit";
+import { ClassCard } from "@/components/student/class-card";
+import { EmptyState, ErrorState, LoadingRows, Spinner } from "@/components/ui-kit";
 import { api, unwrap, type Schemas } from "@/lib/api/client";
 import { formatIDR } from "@/lib/format";
 import { matchesQuery } from "@/lib/search";
@@ -100,51 +99,7 @@ export default function BrowsePage() {
           </Button>
         </div>
       ) : (
-        results.map((c) => {
-          const seatsLeft = Math.max(0, c.capacity - c.seatsTaken);
-          const packagePrice = c.studentRatePerHour * c.defaultPackageHours;
-          return (
-            <Card key={c.id}>
-              <CardContent className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-lg font-semibold">{c.name}</p>
-                    <p className="text-sm text-muted-foreground">with {c.tutorName}</p>
-                  </div>
-                  {c.myEnrollmentStatus && <StatusBadge status={c.myEnrollmentStatus} />}
-                </div>
-                {c.description && <p className="text-sm">{c.description}</p>}
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                  <span>
-                    <span className="font-medium text-foreground">{formatIDR(c.studentRatePerHour)}</span> / hour
-                  </span>
-                  <span>
-                    {c.defaultPackageHours}h package ={" "}
-                    <span className="font-medium text-foreground">{formatIDR(packagePrice)}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Users className="size-3.5" />
-                    {seatsLeft === 0 ? "Full" : `${seatsLeft} of ${c.capacity} seats left`}
-                  </span>
-                </div>
-
-                {c.myEnrollmentStatus === "active" ? (
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href={`/student/classes/${c.id}`}>Open class</Link>
-                  </Button>
-                ) : c.myEnrollmentStatus === "pending_payment" ? (
-                  <Button asChild className="w-full">
-                    <Link href="/student/invoices">Pay to unlock</Link>
-                  </Button>
-                ) : (
-                  <Button className="w-full" disabled={seatsLeft === 0} onClick={() => setEnrolling(c)}>
-                    {seatsLeft === 0 ? "Class is full" : "Enroll"}
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })
+        results.map((c) => <ClassCard key={c.id} cls={c} onEnroll={setEnrolling} />)
       )}
 
       <Dialog open={!!enrolling} onOpenChange={(o) => !o && setEnrolling(null)}>
